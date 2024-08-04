@@ -27,5 +27,11 @@
       "service": "Cognito"
     }
   },
-  "storage": {}
+  "storage": {
+    "chatappbucket": {
+      "dependsOn": [],
+      "providerPlugin": "awscloudformation",
+      "service": "S3"
+    }
+  }
 }

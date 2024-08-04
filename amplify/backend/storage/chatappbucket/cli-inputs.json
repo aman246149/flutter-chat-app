@@ -1,0 +1,14 @@
+{
+  "resourceName": "chatappbucket",
+  "policyUUID": "ea15a163",
+  "bucketName": "chatappbucketname",
+  "storageAccess": "auth",
+  "guestAccess": [],
+  "authAccess": [
+    "CREATE_AND_UPDATE",
+    "READ",
+    "DELETE"
+  ],
+  "triggerFunction": "NONE",
+  "groupAccess": {}
+}

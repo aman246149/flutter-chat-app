@@ -3,7 +3,7 @@ class AppConstants {
 
   static const String serverUrl = "";
   static const String ipAddress = " 192.168.1.4";
-  static const String baseUrl = "http://192.168.1.5:3000";
+  static const String baseUrl = "https://chat-server-ff1g.onrender.com";
 
   static const String token = "token";
   static const String expiresAt = "expiresAt";
