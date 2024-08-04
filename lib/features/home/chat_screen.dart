@@ -1,14 +1,11 @@
-import 'package:brandzone/core/bloc/auth/auth_bloc.dart';
-import 'package:brandzone/core/bloc/chat/chat_cubit.dart';
-import 'package:brandzone/core/data/model/message.dart';
-import 'package:brandzone/core/utils/common_methods.dart';
-
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:socket_io_client/socket_io_client.dart';
+
+import '../../core/bloc/chat/chat_cubit.dart';
 import '../../core/bloc/user/user_cubit.dart';
-import '../../core/socket/io.dart';
-import '../../main.dart';
+import '../../core/data/model/message.dart';
+import '../../core/utils/common_methods.dart';
 import '../auth/export.dart';
+import 'logic/chat_logic.dart';
 
 @RoutePage()
 class ChatPage extends StatefulWidget {
@@ -19,97 +16,21 @@ class ChatPage extends StatefulWidget {
 }
 
 class _ChatPageState extends State<ChatPage> {
-  late SocketIO socketIO;
-  TextEditingController messageController = TextEditingController();
-  ValueNotifier<List<Message>> messages = ValueNotifier<List<Message>>([]);
-  bool _isActive = true;
-  final ScrollController _scrollController = ScrollController();
+  late ChatLogic chatLogic;
 
   @override
   void initState() {
     super.initState();
+    chatLogic = ChatLogic();
     context.read<ChatCubit>().getMessages();
-    socketIO = SocketIO();
-    if (!socketIO.socket.connected) {
-      socketIO.socket.connect();
-    }
-    setupSocketListeners();
-    joinGroup();
-  }
-
-  void setupSocketListeners() {
-    socketIO.socket.onConnect((_) {
-      logger.d('Connected to server');
-    });
-
-    socketIO.socket.onConnectError((err) => logger.d('Connect error: $err'));
-    socketIO.socket.onDisconnect((_) => logger.d('Disconnected from server'));
-    socketIO.socket.onError((error) => logger.d('Error: $error'));
-    socketIO.socket
-        .on('connect_error', (error) => logger.d('Connect error: $error'));
-
-    socketIO.socket.onAny((event, data) {
-      logger.d("Received event: $event, data: $data");
-    });
-
-    socketIO.socket.on("newMessage", (data) {
-      logger.d("Received newMessage event. Data: $data");
-      if (_isActive && data is Map<String, dynamic>) {
-        messages.value = [...messages.value, Message.fromJson(data)];
-      } else {
-        logger.d("Widget is disposed or received data is not a Map: $data");
-      }
-      moveToBottom();
-    });
-
-    socketIO.socket.on("userJoined", (data) {
-      logger.d("User joined: $data");
-      if (_isActive && data is String) {
-        showSnackbar(context, data);
-      }
-    });
-  }
-
-  void joinGroup() {
-    logger.d(
-        "Joining group: ${context.read<ChatCubit>().currentlySelectedGroupId}");
-    socketIO.socket.emit("joinGroup", {
-      "groupName": context.read<ChatCubit>().currentlySelectedGroupId,
-      "userName": context.read<UserCubit>().user?.name ?? ""
-    });
-  }
-
-  void sendMessage() {
-    if (messageController.text.isNotEmpty) {
-      logger.d("Sending message: ${messageController.text}");
-
-      socketIO.socket.emit("groupMessage", {
-        "groupName": context.read<ChatCubit>().currentlySelectedGroupId,
-        "message": messageController.text,
-        "userName": context.read<UserCubit>().user?.name ?? "",
-        "senderId": context.read<ChatCubit>().senderId,
-        "receiverId": context.read<ChatCubit>().receiverId,
-      });
-
-      messageController.clear();
-    }
-  }
-
-  void moveToBottom() {
-    if (!_scrollController.hasClients) return;
-    _scrollController.animateTo(
-      _scrollController.position.maxScrollExtent + kBottomNavigationBarHeight,
-      duration: const Duration(milliseconds: 300),
-      curve: Curves.easeOut,
-    );
+    chatLogic.joinGroup(
+        context.read<ChatCubit>().currentlySelectedGroupId ?? "",
+        context.read<UserCubit>().user?.name ?? "");
   }
 
   @override
   void dispose() {
-    _isActive = false;
-    messageController.dispose();
-    socketIO.socket.disconnect();
-    _scrollController.dispose();
+    chatLogic.dispose();
     super.dispose();
   }
 
@@ -132,9 +53,9 @@ class _ChatPageState extends State<ChatPage> {
             showOverlayLoader(context);
           } else if (state is GetMessagesSuccess) {
             hideOverlayLoader(context);
-            messages.value = state.messages;
+            chatLogic.messages.value = state.messages;
             Future.delayed(Duration(milliseconds: 100), () {
-              moveToBottom();
+              chatLogic.moveToBottom();
             });
           } else if (state is chatError) {
             hideOverlayLoader(context);
@@ -145,12 +66,12 @@ class _ChatPageState extends State<ChatPage> {
           children: [
             Expanded(
               child: ValueListenableBuilder<List<Message>>(
-                valueListenable: messages,
+                valueListenable: chatLogic.messages,
                 builder: (context, messages, _) {
                   return ListView.builder(
                     padding: EdgeInsets.only(
                         bottom: kBottomNavigationBarHeight - 28),
-                    controller: _scrollController,
+                    controller: chatLogic.scrollController,
                     itemCount: messages.length,
                     itemBuilder: (context, index) {
                       final message = messages[index];
@@ -221,10 +142,15 @@ class _ChatPageState extends State<ChatPage> {
           children: [
             Expanded(
               child: BorderedTextFormField(
-                controller: messageController,
+                controller: chatLogic.messageController,
                 hintText: "Type a message",
                 suffix: InkWell(
-                  onTap: sendMessage,
+                  onTap: () => chatLogic.sendMessage(
+                    context.read<ChatCubit>().currentlySelectedGroupId ?? "",
+                    context.read<UserCubit>().user?.name ?? "",
+                    context.read<ChatCubit>().senderId ?? "",
+                    context.read<ChatCubit>().receiverId ?? "",
+                  ),
                   child: Icon(
                     Icons.send,
                     color: AppColors.primary,
