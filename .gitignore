@@ -68,6 +68,6 @@ amplifytools.xcconfig
 **.sample
 #amplify-do-not-edit-end
 
-**/env
-**/.env
-.env
+*.env
+env.dart
+env.g.dart
