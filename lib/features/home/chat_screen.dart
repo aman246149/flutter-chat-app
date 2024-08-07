@@ -18,7 +18,8 @@ class ChatPage extends StatefulWidget {
   State<ChatPage> createState() => _ChatPageState();
 }
 
-class _ChatPageState extends State<ChatPage> with WidgetsBindingObserver {
+class _ChatPageState extends State<ChatPage>
+    with WidgetsBindingObserver, AutomaticKeepAliveClientMixin {
   late ChatLogic chatLogic;
 
   @override
@@ -60,6 +61,7 @@ class _ChatPageState extends State<ChatPage> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -216,6 +218,9 @@ class _ChatPageState extends State<ChatPage> with WidgetsBindingObserver {
       return context.read<ChatCubit>().receiverName ?? "";
     }
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }
 
 MessageType getMessageTypeByUrl(String url) {
