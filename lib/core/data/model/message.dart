@@ -5,6 +5,7 @@ class Message {
   String? senderStatus;
   String? receiver;
   num? timestamp;
+  String? type;
 
   Message({
     this.message,
@@ -13,6 +14,7 @@ class Message {
     this.senderStatus,
     this.receiver,
     this.timestamp,
+    this.type,
   });
 
   Message.fromJson(Map<String, dynamic> json) {
@@ -22,6 +24,7 @@ class Message {
     senderStatus = json['senderStatus'];
     receiver = json['receiver'];
     timestamp = json['timestamp'];
+    type = json['type'];
   }
 
   Map<String, dynamic> toJson() {
@@ -32,6 +35,7 @@ class Message {
     data['senderStatus'] = senderStatus;
     data['receiver'] = receiver;
     data['timestamp'] = timestamp;
+    data['type'] = type;
     return data;
   }
 }

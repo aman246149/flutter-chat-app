@@ -1,9 +1,16 @@
+import 'dart:io';
+
+import 'package:brandzone/core/utils/uploadfiletos3.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 
 import '../../../core/data/model/message.dart';
 import '../../../core/socket/io.dart';
+import '../../../env.dart';
 import '../../../main.dart';
 import '../../auth/export.dart';
+
+enum MessageType { text, image, video, audio, file }
 
 class ChatLogic {
   late SocketIO socketIO;
@@ -58,9 +65,30 @@ class ChatLogic {
   }
 
   void sendMessage(
-      String groupId, String userName, String senderId, String receiverId) {
+      String groupId, String userName, String senderId, String receiverId,
+      {MessageType typeParms = MessageType.text}) {
     if (messageController.text.isNotEmpty) {
       logger.d("Sending message: ${messageController.text}");
+
+      String type = MessageType.text.name;
+      switch (typeParms) {
+        case MessageType.text:
+          type = MessageType.text.name;
+          break;
+        case MessageType.image:
+          type = MessageType.image.name;
+          break;
+        case MessageType.video:
+          type = MessageType.video.name;
+          break;
+        case MessageType.audio:
+          type = MessageType.audio.name;
+          break;
+        case MessageType.file:
+          type = MessageType.file.name;
+          break;
+        default:
+      }
 
       socketIO.socket.emit("groupMessage", {
         "groupName": groupId,
@@ -68,6 +96,7 @@ class ChatLogic {
         "userName": userName,
         "senderId": senderId,
         "receiverId": receiverId,
+        "type": type
       });
 
       messageController.clear();
@@ -81,6 +110,30 @@ class ChatLogic {
       duration: const Duration(milliseconds: 300),
       curve: Curves.easeOut,
     );
+  }
+
+  Future<String?> openFilePicker() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles();
+    if (result != null) {
+      //call s3 upload function
+      File file = File(result
+          .files.single.path!); // Ensure the file path includes the extension
+      String objectKey = file.path
+          .split('/')
+          .last; // Ensure the object key includes the extension
+      final presignedUrl = generatePresignedUrl(
+        Env.accessKey,
+        Env.secretKey,
+        Env.region,
+        Env.bucketName,
+        'assets/$objectKey',
+        3600,
+      );
+      print('Presigned URL: $presignedUrl');
+      await uploadFileToS3(File(result.files.single.path!), presignedUrl);
+      return objectKey;
+    }
+    return null;
   }
 
   void dispose() {

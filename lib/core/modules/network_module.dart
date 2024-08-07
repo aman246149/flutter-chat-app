@@ -16,6 +16,7 @@ abstract class NetworkModule {
   Dio provideDio(Localstore localstore) {
     final dio = Dio();
     dio.options.baseUrl = AppConstants.baseUrl; //Setting baseUrl
+    dio.options.connectTimeout = 60000; //
     dio
       ..interceptors.add(LogInterceptor(
         request: true,

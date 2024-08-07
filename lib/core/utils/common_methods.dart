@@ -1,4 +1,5 @@
 import 'package:another_flushbar/flushbar.dart';
+import 'package:brandzone/features/home/logic/chat_logic.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -244,5 +245,42 @@ String timeAgo(num timestamp) {
     return '${difference.inDays} days ago';
   } else {
     return '${(difference.inDays / 7).floor()} weeks ago';
+  }
+}
+
+MessageType getExtensionType(String url) {
+  String extension = url.split('.').last;
+  switch (extension) {
+    case 'jpg' || 'jpeg' || 'png' || 'gif':
+      return MessageType.image;
+
+    case 'mp4' ||
+          'avi' ||
+          'mkv' ||
+          'flv' ||
+          'mov' ||
+          'wmv' ||
+          '3gp' ||
+          'webm' ||
+          'mpg' ||
+          'mpeg' ||
+          'm4v':
+      return MessageType.video;
+    case 'mp3' ||
+          'wav' ||
+          'aac' ||
+          'wma' ||
+          'flac' ||
+          'ogg' ||
+          'm4a' ||
+          'amr' ||
+          'aiff' ||
+          'alac' ||
+          'dsd':
+      return MessageType.audio;
+    case "pdf" || "doc" || "docx" || "xls" || "xlsx" || "ppt" || "pptx":
+      return MessageType.file;
+    default:
+      return MessageType.text;
   }
 }

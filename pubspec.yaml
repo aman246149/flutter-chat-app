@@ -76,7 +76,10 @@ dependencies:
   print_slayer: ^1.1.0
   firebase_core: ^2.27.0
   file_picker: ^8.0.0+1
-
+  crypto: ^3.0.3
+  envied: ^0.5.4+1
+  intl: ^0.18.1
+  cached_video_player_plus: ^3.0.3
 
 dev_dependencies:
   flutter_test:
@@ -89,7 +92,7 @@ dev_dependencies:
   auto_route_generator: ^7.3.1
   build_runner: any
   flutter_launcher_icons: 0.13.1
-
+  envied_generator: any
 
 
 flutter_native_splash:
@@ -120,3 +123,4 @@ flutter:
   assets:
     - assets/images/
     - assets/svg/
+    - .env    

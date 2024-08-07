@@ -1,10 +1,10 @@
-import 'package:brandzone/core/bloc/auth/auth_bloc.dart';
 import 'package:brandzone/core/bloc/chat/chat_cubit.dart';
 import 'package:brandzone/core/presentation/widgets/appbar.dart';
 import 'package:brandzone/core/utils/common_methods.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../core/bloc/user/user_cubit.dart';
+import '../../core/utils/uploadfiletos3.dart';
 import '../auth/export.dart';
 
 @RoutePage()
@@ -23,6 +23,8 @@ class _HomeScreenState extends State<HomeScreen> {
     context.read<UserCubit>().getAllUsers();
   }
 
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,6 +40,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
       ),
+     
       body: BlocListener<ChatCubit, ChatState>(
         listener: (context, state) {
           if (state is chatLoading) {
