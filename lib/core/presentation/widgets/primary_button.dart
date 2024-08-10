@@ -81,7 +81,7 @@ class PrimaryButton extends StatelessWidget {
                 ),
               ),
               if (icon != null) ...[
-                SizedBox(
+                const SizedBox(
                   width: 10,
                 ),
                 icon!
@@ -144,7 +144,7 @@ class PrimaryOutlineButton extends StatelessWidget {
             children: [
               if (icon != null) ...[
                 icon!,
-                SizedBox(
+                const SizedBox(
                   width: 10,
                 ),
               ],

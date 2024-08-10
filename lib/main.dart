@@ -11,6 +11,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:logger/logger.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'core/data/db/chat_db.dart';
 import 'firebase_options.dart';
 import 'core/bloc/auth/auth_bloc.dart';
 import 'core/bloc/user/user_cubit.dart';
@@ -26,6 +27,8 @@ Future<void> main() async {
     EquatableConfig.stringify = true;
     BindingBase.debugZoneErrorsAreFatal = true;
     WidgetsFlutterBinding.ensureInitialized();
+    await ChatDatabase().database; // Initialize the database
+
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
     );

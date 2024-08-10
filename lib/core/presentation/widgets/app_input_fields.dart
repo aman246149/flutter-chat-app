@@ -28,7 +28,7 @@ class AppInputField extends StatelessWidget {
               controller: controller,
               hintText: hintText,
               obscureText: isObsecure,
-              contentPadding: EdgeInsets.all(16),
+              contentPadding: const EdgeInsets.all(16),
               noBorder: true,
               textStyle: Theme.of(context).textTheme.bodyMedium!.copyWith(
                     fontWeight: FontWeight.w400,

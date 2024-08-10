@@ -76,8 +76,8 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(Icons.arrow_back_ios_rounded,
-                          color: const Color(0xff131A29), size: 16),
+                      const Icon(Icons.arrow_back_ios_rounded,
+                          color: Color(0xff131A29), size: 16),
                       const Hspace(8),
                       CustomTextButton(
                         text: "Go back to Login",

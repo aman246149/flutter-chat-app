@@ -1,10 +1,15 @@
+import 'dart:io';
+
 import 'package:cached_video_player_plus/cached_video_player_plus.dart';
 
 import '../../auth/export.dart';
 
 class VideoPlayerWidget extends StatefulWidget {
-  const VideoPlayerWidget({Key? key, required this.url}) : super(key: key);
+  const VideoPlayerWidget(
+      {Key? key, required this.url, required this.isVideoCached})
+      : super(key: key);
   final String url;
+  final bool isVideoCached;
 
   @override
   State<VideoPlayerWidget> createState() => _VideoPlayerWidgetState();
@@ -22,10 +27,16 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
   }
 
   Future<void> _initializeVideoPlayer() async {
-    _controller = CachedVideoPlayerPlusController.networkUrl(
-      Uri.parse(widget.url),
-      invalidateCacheIfOlderThan: const Duration(days: 1),
-    );
+    if (widget.isVideoCached) {
+      _controller = CachedVideoPlayerPlusController.file(
+        File(widget.url),
+      );
+    } else {
+      _controller = CachedVideoPlayerPlusController.networkUrl(
+        Uri.parse(widget.url),
+        invalidateCacheIfOlderThan: const Duration(days: 1),
+      );
+    }
 
     try {
       await _controller.initialize();

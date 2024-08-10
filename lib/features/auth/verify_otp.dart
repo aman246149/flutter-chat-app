@@ -112,8 +112,8 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(Icons.arrow_back_ios_rounded,
-                              color: const Color(0xff131A29), size: 16),
+                          const Icon(Icons.arrow_back_ios_rounded,
+                              color: Color(0xff131A29), size: 16),
                           const Hspace(8),
                           CustomTextButton(
                             text: "Edit Email ID",

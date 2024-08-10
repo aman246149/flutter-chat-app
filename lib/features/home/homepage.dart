@@ -4,7 +4,6 @@ import 'package:brandzone/core/utils/common_methods.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../core/bloc/user/user_cubit.dart';
-import '../../core/utils/uploadfiletos3.dart';
 import '../auth/export.dart';
 
 @RoutePage()
@@ -36,7 +35,7 @@ class _HomeScreenState extends State<HomeScreen> {
             onPressed: () {
               context.router.replace(const LoginRoute());
             },
-            icon: Icon(Icons.power_settings_new),
+            icon: const Icon(Icons.power_settings_new),
           ),
         ],
       ),

@@ -4,12 +4,7 @@ import 'package:brandzone/core/data/repository/chat_repository.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
-import 'package:socket_io_client/socket_io_client.dart';
 
-import '../../../features/auth/export.dart';
-import '../../socket/io.dart';
-import '../../utils/common_methods.dart';
-import '../user/user_cubit.dart';
 
 part 'chat_state.dart';
 
@@ -31,7 +26,7 @@ class ChatCubit extends Cubit<ChatState> {
     emit(chatLoading());
     try {
       await chatRepository.createGroup(data);
-      emit(CreateGroupSuccess());
+      emit(const CreateGroupSuccess());
     } catch (e) {
       emit(chatError(e.toString()));
     }

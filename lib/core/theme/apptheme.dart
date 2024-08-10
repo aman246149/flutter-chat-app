@@ -49,7 +49,7 @@ class AppTheme {
 
   static ButtonStyle primaryTextButtonStyle = TextButton.styleFrom(
       foregroundColor: Colors.white,
-      padding: EdgeInsets.symmetric(vertical: 14, horizontal: 23),
+      padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 23),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
       backgroundColor: AppColors.primary,
       textStyle: buttonTextStyle);

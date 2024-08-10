@@ -6,6 +6,7 @@ class Message {
   String? receiver;
   num? timestamp;
   String? type;
+  int? storedInLocalDb;
 
   Message({
     this.message,
@@ -15,6 +16,7 @@ class Message {
     this.receiver,
     this.timestamp,
     this.type,
+    this.storedInLocalDb,
   });
 
   Message.fromJson(Map<String, dynamic> json) {
@@ -25,6 +27,7 @@ class Message {
     receiver = json['receiver'];
     timestamp = json['timestamp'];
     type = json['type'];
+    storedInLocalDb = json['storedInLocalDb'];
   }
 
   Map<String, dynamic> toJson() {
@@ -36,6 +39,7 @@ class Message {
     data['receiver'] = receiver;
     data['timestamp'] = timestamp;
     data['type'] = type;
+    data['storedInLocalDb'] = storedInLocalDb;
     return data;
   }
 }
