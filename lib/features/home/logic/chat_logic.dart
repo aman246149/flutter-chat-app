@@ -31,6 +31,7 @@ class ChatLogic {
   ValueNotifier<bool> isUploading = ValueNotifier<bool>(false);
   ChatDatabase chatDatabase = ChatDatabase();
   late BuildContext context;
+  ValueNotifier<bool> isDownloadingFile = ValueNotifier<bool>(false);
 
   ChatLogic() {
     socketIO = SocketIO();
@@ -140,12 +141,16 @@ class ChatLogic {
           filePath: filePath);
       messageController.clear();
     }
+
+    moveToBottom();
   }
 
   void moveToBottom() {
     if (!scrollController.hasClients) return;
     scrollController.animateTo(
-      scrollController.position.maxScrollExtent + kBottomNavigationBarHeight,
+      scrollController.position.maxScrollExtent +
+          kBottomNavigationBarHeight +
+          100,
       duration: const Duration(milliseconds: 300),
       curve: Curves.easeOut,
     );
@@ -200,12 +205,13 @@ class ChatLogic {
       String? filePath}) async {
     String? savePathUrl;
     if (typeOfMessage != MessageType.text.name && filePath == null) {
-      // Run saveFileFromUrl directly without using Isolate.run
+      isDownloadingFile.value = true;
       savePathUrl = await saveFileFromUrl(
         MessageType.values.firstWhere((e) => e.name == typeOfMessage),
         message,
         message.split('/').last,
       );
+      isDownloadingFile.value = false;
     }
 
     if (filePath != null) {

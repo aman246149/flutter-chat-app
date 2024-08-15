@@ -21,7 +21,7 @@ class _AnyFileViewState extends State<AnyFileView>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-
+    
     switch (getExtensionType(widget.url)) {
       case MessageType.image:
         return widget.storedInLocalDb

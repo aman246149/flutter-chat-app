@@ -22,8 +22,6 @@ class _HomeScreenState extends State<HomeScreen> {
     context.read<UserCubit>().getAllUsers();
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,7 +37,6 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
       ),
-     
       body: BlocListener<ChatCubit, ChatState>(
         listener: (context, state) {
           if (state is chatLoading) {
@@ -64,14 +61,21 @@ class _HomeScreenState extends State<HomeScreen> {
                   final user = state.users[index];
                   return GestureDetector(
                     onTap: () {
-                      context.read<ChatCubit>().createGroup({
-                        "groupId": context.read<ChatCubit>().generateGroupID(
-                              context.read<UserCubit>().user?.sub ?? "",
-                              user.sub ?? "",
-                              context.read<UserCubit>().user?.name ?? "",
-                              user.name ?? "",
-                            ),
-                      });
+                      context.read<ChatCubit>().generateGroupID(
+                            context.read<UserCubit>().user?.sub ?? "",
+                            user.sub ?? "",
+                            context.read<UserCubit>().user?.name ?? "",
+                            user.name ?? "",
+                          );
+                      context.router.push(const ChatPage());
+                      // context.read<ChatCubit>().createGroup({
+                      //   "groupId": context.read<ChatCubit>().generateGroupID(
+                      //         context.read<UserCubit>().user?.sub ?? "",
+                      //         user.sub ?? "",
+                      //         context.read<UserCubit>().user?.name ?? "",
+                      //         user.name ?? "",
+                      //       ),
+                      // });
                     },
                     child: ListTile(
                       title: Text(user.name ?? ""),
